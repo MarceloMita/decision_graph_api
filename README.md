@@ -1,24 +1,84 @@
-# README
+# Decision Graph API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Endpoints
 
-Things you may want to cover:
+### Resource Tree
 
-* Ruby version
+#### Tree List
 
-* System dependencies
+`[GET] '/trees'`
 
-* Configuration
+#### Show Tree
 
-* Database creation
+`[GET] '/trees/:slug_name'`
 
-* Database initialization
+#### Create Tree
 
-* How to run the test suite
+`[POST] '/trees'`
 
-* Services (job queues, cache servers, search engines, etc.)
+To create the tree:
 
-* Deployment instructions
+![Is Person Healthy](/images/is_person_healthy_graph_example.jpg?raw=true)
 
-* ...
+##### Params
+
+```JSON
+{
+  "title": "Is Person Healthy",
+  "nodes": [
+    {
+      "name": "workout_node",
+      "condition": "/workout = true/",
+      "true_node": "eat_vegetables_node",
+      "false_node": "unhealthy_leaf"
+    },
+    {
+      "name": "eat_vegetables_node",
+      "condition": "/eat_vegetables = true/",
+      "true_node": "medical_checkups_node",
+      "false_node": "unhealthy_leaf"
+    },
+    {
+      "name": "medical_checkups_node",
+      "condition": "/medical_checkups = true/",
+      "true_node": "healthy_leaf",
+      "false_node": "unhealthy_leaf"
+    },
+  ],
+  "leafs": ["unhealthy_leaf", "healthy_leaf"],
+  "root": "workout_node",
+  "variables": ["workout", "eat_vegetables", "medical_checkups"]
+}
+```
+
+##### Success Response
+`status: 201`
+
+```JSON
+{
+  "slug": "is_person_healthy",
+  "title": "Is Person Healthy",
+  "nodes": [
+    {
+      "name": "workout_node",
+      "condition": "/workout = true/",
+      "true_node": "eat_vegetables_node",
+      "false_node": "unhealthy_leaf"
+    },
+    {
+      "name": "eat_vegetables_node",
+      "condition": "/eat_vegetables = true/",
+      "true_node": "medical_checkups_node",
+      "false_node": "unhealthy_leaf"
+    },
+    {
+      "name": "medical_checkups_node",
+      "condition": "/medical_checkups = true/",
+      "true_node": "healthy_leaf",
+      "false_node": "unhealthy_leaf"
+    },
+  ],
+  "leafs": ["unhealthy_leaf","healthy_leaf"],
+  "root": "workout_node"
+}
+```
